@@ -1,26 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer components {
+	.auth-input {
+		@apply w-full px-4 py-3 outline-none bg-[#222] focus-within:bg-[#191919] rounded-md;
+	}
+
+	.primary-btn {
+		@apply flex items-center justify-center w-full h-full bg-emerald-500 hover:bg-emerald-400 text-white rounded-md;
+	}
+
+	.auth-form {
+		@apply w-[28rem] md:w-[30rem] p-4 absolute left-[calc(50%-14rem)] md:left-[calc(50%-15rem)] top-[calc(50%-225.5px)] bg-[#1c1c1c] shadow-lg shadow-black/80 rounded-sm;
+	}
+
+	.loading-spinner {
+		@apply w-6 h-6 border-4 border-l-emerald-500 border-t-emerald-500 border-r-black border-b-black border-dotted;
+	}
+}
+
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+	background-color: #161616;
+	font-family: "Poppins", sans-serif;
 }
