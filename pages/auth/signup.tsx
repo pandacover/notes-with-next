@@ -1,14 +1,21 @@
 import Link from "next/link";
 import React from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { Spinner } from "../../components";
-import { createUser } from "../../utils/supabase";
-import Head from "../../components/meta";
+import { Spinner, Head } from "../../components";
+import { createUser, authUser } from "../../utils/supabase";
+import { useRouter } from "next/router";
 
 const Signup = () => {
 	const [[email, password], setCreds] = React.useState(["", ""]);
 	const [passToggle, setPassToggle] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
+	const router = useRouter();
+
+	React.useEffect(() => {
+		authUser()
+			.then(() => router.replace("/dashboard"))
+			.catch((err) => console.error(err));
+	}, [router]);
 
 	const onTogglePassword = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -17,17 +24,13 @@ const Signup = () => {
 		setPassToggle(!passToggle);
 	};
 
-	const onCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+	const onCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		try {
-			setLoading(true);
-			const user = await createUser({ email, password });
-			console.log(user);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
+		setLoading(true);
+		createUser({ email, password })
+			.then((user) => router.replace("/dashboard"))
+			.catch((err) => console.error(err))
+			.finally(() => setLoading(false));
 	};
 
 	return (

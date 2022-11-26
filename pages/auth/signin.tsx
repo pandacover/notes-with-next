@@ -1,24 +1,27 @@
 import Link from "next/link";
-import Head from "../../components/meta";
 import React from "react";
-import { Spinner } from "../../components";
-import { loginUser } from "../../utils/supabase";
+import { Spinner, Head } from "../../components";
+import { authUser, loginUser } from "../../utils/supabase";
+import { useRouter } from "next/router";
 
 const Signin = () => {
+	const router = useRouter();
 	const [[email, password], setCreds] = React.useState(["", ""]);
 	const [loading, setLoading] = React.useState(false);
 
-	const onLoginUser = async (e: React.FormEvent<HTMLFormElement>) => {
+	React.useEffect(() => {
+		authUser()
+			.then(() => router.replace("/dashboard"))
+			.catch((err) => console.error(err));
+	}, [router]);
+
+	const onLoginUser = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		try {
-			setLoading(true);
-			const user = await loginUser({ email, password });
-			console.log(user);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
+		setLoading(true);
+		loginUser({ email, password })
+			.then((user) => router.replace("/dashboard"))
+			.catch((err) => console.error(err))
+			.finally(() => setLoading(false));
 	};
 	return (
 		<>

@@ -44,7 +44,7 @@ export const loginUser = async ({
 };
 
 // @desc Get user
-// @access None
+// @access Private
 
 export const authUser = async () => {
 	const {
@@ -53,8 +53,18 @@ export const authUser = async () => {
 	} = await supabase.auth.getUser();
 
 	if (error) {
-		return Promise.reject("Cannot authorize the user");
+		return Promise.reject(new Error("Cannot authorize the user"));
 	}
 
 	return Promise.resolve(user);
+};
+
+// @desc Logout user
+// @access Public
+
+export const logoutUser = async () => {
+	const { error } = await supabase.auth.signOut();
+	if (error) return Promise.reject(new Error(error?.message));
+
+	return Promise.resolve("Logged out user!");
 };
