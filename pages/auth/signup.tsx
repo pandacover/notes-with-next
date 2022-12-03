@@ -2,20 +2,13 @@ import Link from "next/link";
 import React from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Spinner, Head } from "../../components";
-import { createUser, authUser } from "../../utils/supabase";
+import { createUser } from "../../utils/supabase";
 import { useRouter } from "next/router";
 
 const Signup = () => {
 	const [[email, password], setCreds] = React.useState(["", ""]);
 	const [passToggle, setPassToggle] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-	const router = useRouter();
-
-	React.useEffect(() => {
-		authUser()
-			.then(() => router.replace("/dashboard"))
-			.catch((err) => console.error(err));
-	}, [router]);
 
 	const onTogglePassword = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -24,13 +17,16 @@ const Signup = () => {
 		setPassToggle(!passToggle);
 	};
 
-	const onCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
+	const onCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setLoading(true);
-		createUser({ email, password })
-			.then((user) => router.replace("/dashboard"))
-			.catch((err) => console.error(err))
-			.finally(() => setLoading(false));
+		try {
+			setLoading(true);
+			await createUser({ email, password });
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -49,6 +45,7 @@ const Signup = () => {
 						Email
 					</label>
 					<input
+						disabled={loading}
 						type='email'
 						name='email'
 						id='email'
@@ -70,6 +67,7 @@ const Signup = () => {
 						Password
 					</label>
 					<input
+						disabled={loading}
 						type={passToggle ? "text" : "password"}
 						name='password'
 						id='password'

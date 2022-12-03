@@ -15,13 +15,12 @@ export const createUser = async ({
 	[key: string]: string;
 }) => {
 	const {
-		data: { user },
+		data: { user, session },
 		error,
 	} = await supabase.auth.signUp({ email, password });
-	if (error) {
-		return Promise.reject(new Error(error.message));
-	}
-	return Promise.resolve(user);
+
+	if (error) throw error;
+	return { user, session };
 };
 
 // @desc Login existing user
@@ -34,29 +33,12 @@ export const loginUser = async ({
 	[key: string]: string;
 }) => {
 	const {
-		data: { user },
+		data: { user, session },
 		error,
 	} = await supabase.auth.signInWithPassword({ email, password });
-	if (error) {
-		return Promise.reject(new Error(error.message));
-	}
-	return Promise.resolve(user);
-};
 
-// @desc Get user
-// @access Private
-
-export const authUser = async () => {
-	const {
-		data: { user },
-		error,
-	} = await supabase.auth.getUser();
-
-	if (error) {
-		return Promise.reject(new Error("Cannot authorize the user"));
-	}
-
-	return Promise.resolve(user);
+	if (error) throw error;
+	return { user, session };
 };
 
 // @desc Logout user
@@ -64,7 +46,7 @@ export const authUser = async () => {
 
 export const logoutUser = async () => {
 	const { error } = await supabase.auth.signOut();
-	if (error) return Promise.reject(new Error(error?.message));
 
-	return Promise.resolve("Logged out user!");
+	if (error) throw error;
+	return "Logged out user!";
 };

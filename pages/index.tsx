@@ -1,34 +1,19 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { authUser } from "../utils/supabase";
-import { Spinner, Head, Navbar } from "../components";
+import { createUser } from "../utils/supabase";
+import { Spinner, Head } from "../components";
 import { IoBookOutline } from "react-icons/io5";
 import Link from "next/link";
 
 export default function Home() {
 	const router = useRouter();
-	const [loading, setLoading] = React.useState(false);
-
-	React.useEffect(() => {
-		setLoading(true);
-		authUser()
-			.then(() => router.replace("/dashboard"))
-			.catch((err) => console.error(err))
-			.finally(() => setLoading(false));
-	}, [router]);
 
 	const onStartWithNotes = async (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 	) => {
 		e.preventDefault();
-		setLoading(true);
-		authUser()
-			.then(() => router.replace("/dashboard"))
-			.catch(() => router.push("/auth/signup"))
-			.finally(() => setLoading(false));
+		router.push("/auth/signup");
 	};
-
-	if (loading) return <Spinner className='loading-spinner' />;
 
 	return (
 		<>
